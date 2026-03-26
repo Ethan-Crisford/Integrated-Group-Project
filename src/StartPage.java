@@ -40,7 +40,6 @@ public class StartPage extends Application {
         stage.setScene(scene);
         stage.show();
     }
-
     private void openLogin(ActionEvent event) {
 
 

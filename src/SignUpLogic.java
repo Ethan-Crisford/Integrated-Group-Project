@@ -3,7 +3,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import javafx.scene.control.*;
 
-
 public class SignUpLogic {
 
     private final String url = "jdbc:mysql://165.227.235.122/ceb96_CI536Login";
