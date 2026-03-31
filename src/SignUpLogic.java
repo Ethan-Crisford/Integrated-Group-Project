@@ -32,7 +32,6 @@ public class SignUpLogic {
                 return "Username already taken!";
             }
 
-
             String insertQuery = "INSERT INTO login (username, password) VALUES (?, ?)";
             PreparedStatement psInsert = con.prepareStatement(insertQuery);
             psInsert.setString(1, username);

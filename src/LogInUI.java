@@ -35,7 +35,6 @@ public class LogInUI extends Application {
             System.out.println("Database connection failed!");
         }
 
-
         Label titleLabel = new Label("User Login");
         titleLabel.setFont(Font.font("Tahoma", 36));
         titleLabel.setStyle("-fx-text-fill: #6A0DAD;");
