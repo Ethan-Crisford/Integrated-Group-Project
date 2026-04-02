@@ -1,5 +1,3 @@
-
-
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -21,19 +19,16 @@ public class LogInUI extends Application {
     private Label messageLabel;
     private boolean showingPassword = false;
     private LogInService loginService;
-    private Stage stage; // Reference to the main stage
+    private Stage stage;
 
     @Override
     public void start(Stage stage) {
-        this.stage = stage; // Capture the stage reference
+        this.stage = stage;
 
         try {
-            loginService = new LogInService(
-                    "jdbc:mysql://165.227.235.122/ceb96_CI536Login",
-                    "ceb96_CI536Login",
-                    "4V9o&G$?!ro)chO%H["
-            );
-        } catch (SQLException e) {
+            loginService = new LogInService("jdbc:mysql://165.227.235.122/ceb96_CI536Login", "ceb96_CI536Login", "4V9o&G$?!ro)chO%H[");
+        }
+        catch (SQLException e) {
             e.printStackTrace();
         }
 
@@ -92,7 +87,8 @@ public class LogInUI extends Application {
             visiblePasswordField.setManaged(false);
             eyeButton.setText("🐵");
             showingPassword = false;
-        } else {
+        }
+        else {
             visiblePasswordField.setText(passwordField.getText());
             visiblePasswordField.setVisible(true);
             visiblePasswordField.setManaged(true);
@@ -118,11 +114,13 @@ public class LogInUI extends Application {
                 // NAVIGATION: Open Home Page
                 HomePageUI homePage = new HomePageUI();
                 homePage.show(stage);
-            } else {
+            }
+            else {
                 messageLabel.setStyle("-fx-text-fill: red;");
                 messageLabel.setText("Invalid username or password!");
             }
-        } catch (SQLException e) {
+        }
+        catch (SQLException e) {
             messageLabel.setStyle("-fx-text-fill: red;");
             messageLabel.setText("Database error!");
             e.printStackTrace();

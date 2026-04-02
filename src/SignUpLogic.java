@@ -42,7 +42,8 @@ public class SignUpLogic {
 
             return "Sign Up successful!";
 
-        } catch (SQLException e) {
+        }
+        catch (SQLException e) {
             e.printStackTrace();
             return "Database error!";
         }
