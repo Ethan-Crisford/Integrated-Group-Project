@@ -29,13 +29,19 @@ public class HomePageUI {
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
+        Button Basket = new Button ("\uD83D\uDED2");
+        Basket.setOnAction(this::ToBasket);
+
         Button btnGarage = new Button("My Garage");
         btnGarage.setOnAction(this::OpenMyGarage);
 
         Button btnLogout = new Button("Logout");
         btnLogout.setOnAction(this::Logout);
 
-        navbar.getChildren().addAll(logo, spacer, btnGarage, btnLogout);
+        Button SavedItems = new Button("⭐");
+        SavedItems.setOnAction(this::SavedItems);
+
+        navbar.getChildren().addAll(logo, spacer, SavedItems,Basket, btnGarage, btnLogout);
 
         root.setTop(navbar);
 
@@ -108,5 +114,19 @@ public class HomePageUI {
         currentStage.close();
         MyGarage mygarage = new MyGarage();
         mygarage.start(new Stage());
+    }
+
+    private void ToBasket(ActionEvent event) {
+        Stage currentStage = (Stage) ((Button) event.getSource()).getScene().getWindow();
+        currentStage.close();
+        Basket basket = new Basket();
+        basket.start(new Stage());
+    }
+
+    private void SavedItems(ActionEvent event) {
+        Stage currentStage = (Stage) ((Button) event.getSource()).getScene().getWindow();
+        currentStage.close();
+        SavedItems saved = new SavedItems();
+        saved.start(new Stage());
     }
 }
