@@ -8,6 +8,7 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import javafx.event.ActionEvent;
 
 public class HomePageUI {
 
@@ -29,7 +30,11 @@ public class HomePageUI {
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
         Button btnGarage = new Button("My Garage");
+        btnGarage.setOnAction(this::OpenMyGarage);
+
         Button btnLogout = new Button("Logout");
+        btnLogout.setOnAction(this::Logout);
+
         navbar.getChildren().addAll(logo, spacer, btnGarage, btnLogout);
 
         root.setTop(navbar);
@@ -89,5 +94,19 @@ public class HomePageUI {
         card.setPrefWidth(180);
         card.getChildren().addAll(new Label(title), new Label(price));
         return card;
+    }
+
+    private void Logout(ActionEvent event) {
+        Stage currentStage = (Stage) ((Button) event.getSource()).getScene().getWindow();
+        currentStage.close();
+        StartPage startPage = new StartPage();
+        startPage.start(new Stage());
+    }
+
+    private void OpenMyGarage(ActionEvent event) {
+        Stage currentStage = (Stage) ((Button) event.getSource()).getScene().getWindow();
+        currentStage.close();
+        MyGarage mygarage = new MyGarage();
+        mygarage.start(new Stage());
     }
 }

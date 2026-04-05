@@ -138,7 +138,6 @@ public class LogInUI extends Application {
     private void Back(ActionEvent event) {
         Stage currentStage = (Stage) ((Button) event.getSource()).getScene().getWindow();
         currentStage.close();
-
         StartPage startPage = new StartPage();
         startPage.start(new Stage());
     }
