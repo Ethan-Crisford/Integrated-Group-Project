@@ -3,6 +3,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
@@ -16,6 +17,7 @@ public class SignUpUI extends Application {
     private Label messageLabel;
 
     private SignUpLogic logic;
+    StartPage startPage;
 
     @Override
     public void start(Stage stage) {
@@ -25,6 +27,9 @@ public class SignUpUI extends Application {
         Label title = new Label("Sign Up");
         title.setFont(Font.font("Tahoma", 32));
         title.setStyle("-fx-text-fill: #6A0DAD;");
+
+        Button BackButton = new Button("Back");
+        BackButton.setOnAction(this::Back);
 
         usernameField = new TextField();
         usernameField.setPromptText("Username");
@@ -45,10 +50,15 @@ public class SignUpUI extends Application {
         messageLabel = new Label();
         messageLabel.setFont(Font.font(14));
 
+        HBox topBar = new HBox();
+        topBar.setAlignment(Pos.TOP_LEFT);
+        topBar.getChildren().add(BackButton);
+
         VBox root = new VBox(15);
         root.setAlignment(Pos.CENTER);
         root.setPadding(new Insets(30));
-        root.getChildren().addAll(title, usernameField, passwordField, confirmPasswordField, submitButton, messageLabel);
+
+        root.getChildren().addAll(topBar, title, usernameField, passwordField, confirmPasswordField, submitButton, messageLabel);
 
         root.setStyle("-fx-background-color: #EDE7F5;");
 
@@ -65,6 +75,14 @@ public class SignUpUI extends Application {
         String result = logic.registerUser(username, password, confirmPassword);
 
         messageLabel.setText(result);
+    }
+
+    private void Back(ActionEvent event) {
+        Stage currentStage = (Stage) ((Button) event.getSource()).getScene().getWindow();
+        currentStage.close();
+
+        StartPage startPage = new StartPage();
+        startPage.start(new Stage());
     }
 
     public static void main(String[] args) {

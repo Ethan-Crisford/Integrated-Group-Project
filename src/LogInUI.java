@@ -1,4 +1,5 @@
 import javafx.application.Application;
+import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -67,7 +68,14 @@ public class LogInUI extends Application {
         messageLabel = new Label("");
         messageLabel.setFont(Font.font("Tahoma", 14));
 
-        VBox root = new VBox(20, titleLabel, usernameField, passwordBox, confirmButton, messageLabel);
+        Button BackButton = new Button("Back");
+        BackButton.setOnAction(this::Back);
+
+        HBox topBar = new HBox();
+        topBar.setAlignment(Pos.TOP_LEFT);
+        topBar.getChildren().add(BackButton);
+
+        VBox root = new VBox(20, topBar, titleLabel, usernameField, passwordBox, confirmButton, messageLabel);
         root.setAlignment(Pos.CENTER);
         root.setPadding(new Insets(40));
         root.setStyle("-fx-background-color: #EDE7F5;");
@@ -125,6 +133,14 @@ public class LogInUI extends Application {
             messageLabel.setText("Database error!");
             e.printStackTrace();
         }
+    }
+
+    private void Back(ActionEvent event) {
+        Stage currentStage = (Stage) ((Button) event.getSource()).getScene().getWindow();
+        currentStage.close();
+
+        StartPage startPage = new StartPage();
+        startPage.start(new Stage());
     }
 
     public static void main(String[] args) {
