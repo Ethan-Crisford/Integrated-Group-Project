@@ -55,7 +55,7 @@ public class HomePageUI {
         searchArea.setAlignment(Pos.CENTER);
         searchArea.setStyle("-fx-background-color: #f4f4f4; -fx-padding: 40; -fx-border-radius: 10;");
 
-        Label headline = new Label("Find Cars or Parts in One Place");
+        Label headline = new Label("Find Cars & Parts In One Place");
         headline.setFont(Font.font("Tahoma", 20));
 
         HBox searchBar = new HBox(10);

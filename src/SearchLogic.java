@@ -26,7 +26,7 @@ public class SearchLogic {
                 int miles = rs.getInt("miles");
                 double price = rs.getDouble("price");
 
-                Label result = new Label(make + " " + model + " " + year + " " + miles + " " + price);
+                Label result = new Label(make + " " + model + " Year: " + year + " Miles: " + miles + " Price:£" + price);
                 resultsBox.getChildren().add(result);
             }
         }
