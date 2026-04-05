@@ -8,7 +8,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-public class MyGarage extends Application {
+public class MyGarage{
     public void start(Stage stage) {
         Label Title = new Label("My Garage");
         HBox hBox = new HBox(Title);

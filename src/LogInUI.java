@@ -27,7 +27,7 @@ public class LogInUI extends Application {
         this.stage = stage;
 
         try {
-            loginService = new LogInService("jdbc:mysql://165.227.235.122/ceb96_CI536Login", "ceb96_CI536Login", "4V9o&G$?!ro)chO%H[");
+            loginService = new LogInService("jdbc:mysql://165.227.235.122/ceb96_CI536Database", "ceb96_CI536Login", "4V9o&G$?!ro)chO%H[");
         }
         catch (SQLException e) {
             e.printStackTrace();

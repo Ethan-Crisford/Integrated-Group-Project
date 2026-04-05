@@ -1,5 +1,3 @@
-
-
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -9,12 +7,19 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.event.ActionEvent;
+import java.sql.SQLException;
+import java.util.Objects;
 
 public class HomePageUI {
+    private TextField searchInput;
+    private ComboBox<String> typeSelector;
+    private HBox featuredContent;
+    private VBox Results;
+    private BorderPane root;
 
     public void show(Stage stage) {
         // Root Layout
-        BorderPane root = new BorderPane();
+        root = new BorderPane();
         root.setPadding(new Insets(20));
 
         // Header + Navbar
@@ -56,16 +61,17 @@ public class HomePageUI {
         HBox searchBar = new HBox(10);
         searchBar.setAlignment(Pos.CENTER);
 
-        ComboBox<String> typeSelector = new ComboBox<>();
+        typeSelector = new ComboBox<>();
         typeSelector.getItems().addAll("Cars", "Parts");
         typeSelector.setValue("Cars");
 
-        TextField searchInput = new TextField();
+        searchInput = new TextField();
         searchInput.setPromptText("Search BMW, Brake Pads, etc...");
         searchInput.setPrefWidth(350);
 
         Button searchBtn = new Button("Search");
         searchBtn.setStyle("-fx-background-color: #6A0DAD; -fx-text-fill: white;");
+        searchBtn.setOnAction(this::search);
 
         searchBar.getChildren().addAll(typeSelector, searchInput, searchBtn);
         searchArea.getChildren().addAll(headline, searchBar);
@@ -73,7 +79,7 @@ public class HomePageUI {
         root.setCenter(searchArea);
 
         // 3. Featured Section (Bottom)
-        HBox featuredContent = new HBox(20);
+        featuredContent = new HBox(20);
         featuredContent.setPadding(new Insets(20, 0, 0, 0));
         featuredContent.setAlignment(Pos.CENTER);
 
@@ -85,6 +91,10 @@ public class HomePageUI {
         );
 
         root.setBottom(featuredContent);
+
+        Results = new VBox(15);
+        Results.setPadding(new Insets(20));
+        Results.setAlignment(Pos.CENTER);
 
         Scene scene = new Scene(root, 900, 600);
         stage.setTitle("AutoPartHub - Home");
@@ -128,5 +138,26 @@ public class HomePageUI {
         currentStage.close();
         SavedItems saved = new SavedItems();
         saved.start(new Stage());
+    }
+
+    private void search(ActionEvent event){
+        try {
+            Results.getChildren().clear();
+            String type = typeSelector.getValue();
+            String query = searchInput.getText();
+            SearchLogic searchLogic = new SearchLogic();
+            searchLogic.SearchStatement(query, Results);
+            if (Results.getChildren().size() == 0) {
+                root.setBottom(featuredContent);
+                searchInput.setText("");
+                searchInput.setPromptText("No Results");
+            }
+            else{
+                root.setBottom(Results);
+            }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }
