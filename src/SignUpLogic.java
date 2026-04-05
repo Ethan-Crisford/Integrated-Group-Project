@@ -6,7 +6,7 @@ import javafx.scene.control.*;
 
 public class SignUpLogic {
 
-    private final String url = "jdbc:mysql://165.227.235.122/ceb96_CI536Login";
+    private final String url = "jdbc:mysql://165.227.235.122/ceb96_CI536Database";
     private final String dbUser = "ceb96_CI536Login";
     private final String dbPassword = "4V9o&G$?!ro)chO%H[";
 
