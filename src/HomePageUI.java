@@ -16,6 +16,7 @@ public class HomePageUI {
     private HBox featuredContent;
     private VBox Results;
     private BorderPane root;
+    public static String type;
 
     public void show(Stage stage) {
         // Root Layout
@@ -143,7 +144,7 @@ public class HomePageUI {
     private void search(ActionEvent event){
         try {
             Results.getChildren().clear();
-            String type = typeSelector.getValue();
+            type = typeSelector.getValue();
             String query = searchInput.getText();
             SearchLogic searchLogic = new SearchLogic();
             searchLogic.SearchStatement(query, Results);
