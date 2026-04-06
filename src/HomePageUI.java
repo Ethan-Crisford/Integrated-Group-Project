@@ -16,6 +16,7 @@ public class HomePageUI {
     private HBox featuredContent;
     private VBox Results;
     private BorderPane root;
+    public static String type;
 
     public void show(Stage stage) {
         // Root Layout
@@ -55,7 +56,7 @@ public class HomePageUI {
         searchArea.setAlignment(Pos.CENTER);
         searchArea.setStyle("-fx-background-color: #f4f4f4; -fx-padding: 40; -fx-border-radius: 10;");
 
-        Label headline = new Label("Find Cars or Parts in One Place");
+        Label headline = new Label("Find Cars & Parts In One Place");
         headline.setFont(Font.font("Tahoma", 20));
 
         HBox searchBar = new HBox(10);
@@ -143,7 +144,7 @@ public class HomePageUI {
     private void search(ActionEvent event){
         try {
             Results.getChildren().clear();
-            String type = typeSelector.getValue();
+            type = typeSelector.getValue();
             String query = searchInput.getText();
             SearchLogic searchLogic = new SearchLogic();
             searchLogic.SearchStatement(query, Results);
