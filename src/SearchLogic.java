@@ -1,4 +1,7 @@
+import javafx.event.ActionEvent;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 import java.sql.*;
@@ -28,8 +31,17 @@ public class SearchLogic {
                     int miles = rs.getInt("miles");
                     double price = rs.getDouble("price");
 
-                    Label result = new Label(make + " " + model + " Year: " + year + " Miles: " + miles + " Price:£" + price);
-                    resultsBox.getChildren().add(result);
+                    HBox Rrow = new  HBox(10);
+                    Label result = new Label(make + " | " + model + " | Year: " + year + " | Miles: " + miles + " | Price: £" + price + " |");
+
+                    String item = make + " | " + model + " | Year: " + year + " | Miles: " + miles + " | Price: £" + price + " |";
+                    Button addToBasket = new Button("Add To Basket");
+                    addToBasket.setOnAction(e -> {
+                        Basket.basketItems.add(item);
+                    });
+
+                    Rrow.getChildren().addAll(result,addToBasket);
+                    resultsBox.getChildren().add(Rrow);
 
                 }
             } catch (SQLException e) {
@@ -47,15 +59,24 @@ public class SearchLogic {
                 psSearch.setString(3, Squery);
                 ResultSet rs = psSearch.executeQuery();
                 while (rs.next()) {
+                    Integer id = rs.getInt("id");
                     String name = rs.getString("name");
                     String category = rs.getString("category");
                     Double price = rs.getDouble("price");
                     String partCondition = rs.getString("part_condition");
                     String brand = rs.getString("brand");
 
-                    Label result = new Label(name + " " + category + " Price:£" + price + " Condition: " + partCondition + " brand: " + brand);
-                    resultsBox.getChildren().add(result);
+                    HBox Rrow = new  HBox(10);
+                    Label result = new Label(name + " | " + category + " | Price:£" + price + " | Condition: " + partCondition + " | brand: " + brand + " |");
 
+                    String item = name + " | " + category + " | Price:£" + price + " | Condition: " + partCondition + " | brand: " + brand + " |";
+                    Button addToBasket = new Button("Add To Basket");
+                    addToBasket.setOnAction(e -> {
+                        Basket.basketItems.add(item);
+                    });
+
+                    Rrow.getChildren().addAll(result,addToBasket);
+                    resultsBox.getChildren().add(Rrow);
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
