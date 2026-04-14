@@ -1,5 +1,3 @@
-
-
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -8,12 +6,21 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import javafx.event.ActionEvent;
+import java.sql.SQLException;
+import java.util.Objects;
 
 public class HomePageUI {
+    private TextField searchInput;
+    private ComboBox<String> typeSelector;
+    private HBox featuredContent;
+    private VBox Results;
+    private BorderPane root;
+    public static String type;
 
     public void show(Stage stage) {
         // Root Layout
-        BorderPane root = new BorderPane();
+        root = new BorderPane();
         root.setPadding(new Insets(20));
 
         // Header + Navbar
@@ -28,9 +35,19 @@ public class HomePageUI {
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
+        Button Basket = new Button ("\uD83D\uDED2");
+        Basket.setOnAction(this::ToBasket);
+
         Button btnGarage = new Button("My Garage");
+        btnGarage.setOnAction(this::OpenMyGarage);
+
         Button btnLogout = new Button("Logout");
-        navbar.getChildren().addAll(logo, spacer, btnGarage, btnLogout);
+        btnLogout.setOnAction(this::Logout);
+
+        Button SavedItems = new Button("⭐");
+        SavedItems.setOnAction(this::SavedItems);
+
+        navbar.getChildren().addAll(logo, spacer, SavedItems,Basket, btnGarage, btnLogout);
 
         root.setTop(navbar);
 
@@ -39,22 +56,23 @@ public class HomePageUI {
         searchArea.setAlignment(Pos.CENTER);
         searchArea.setStyle("-fx-background-color: #f4f4f4; -fx-padding: 40; -fx-border-radius: 10;");
 
-        Label headline = new Label("Find Cars or Parts in One Place");
+        Label headline = new Label("Find Cars & Parts In One Place");
         headline.setFont(Font.font("Tahoma", 20));
 
         HBox searchBar = new HBox(10);
         searchBar.setAlignment(Pos.CENTER);
 
-        ComboBox<String> typeSelector = new ComboBox<>();
+        typeSelector = new ComboBox<>();
         typeSelector.getItems().addAll("Cars", "Parts");
         typeSelector.setValue("Cars");
 
-        TextField searchInput = new TextField();
+        searchInput = new TextField();
         searchInput.setPromptText("Search BMW, Brake Pads, etc...");
         searchInput.setPrefWidth(350);
 
         Button searchBtn = new Button("Search");
         searchBtn.setStyle("-fx-background-color: #6A0DAD; -fx-text-fill: white;");
+        searchBtn.setOnAction(this::search);
 
         searchBar.getChildren().addAll(typeSelector, searchInput, searchBtn);
         searchArea.getChildren().addAll(headline, searchBar);
@@ -62,7 +80,7 @@ public class HomePageUI {
         root.setCenter(searchArea);
 
         // 3. Featured Section (Bottom)
-        HBox featuredContent = new HBox(20);
+        featuredContent = new HBox(20);
         featuredContent.setPadding(new Insets(20, 0, 0, 0));
         featuredContent.setAlignment(Pos.CENTER);
 
@@ -74,6 +92,10 @@ public class HomePageUI {
         );
 
         root.setBottom(featuredContent);
+
+        Results = new VBox(15);
+        Results.setPadding(new Insets(20));
+        Results.setAlignment(Pos.CENTER);
 
         Scene scene = new Scene(root, 900, 600);
         stage.setTitle("AutoPartHub - Home");
@@ -89,5 +111,54 @@ public class HomePageUI {
         card.setPrefWidth(180);
         card.getChildren().addAll(new Label(title), new Label(price));
         return card;
+    }
+
+    private void Logout(ActionEvent event) {
+        Stage currentStage = (Stage) ((Button) event.getSource()).getScene().getWindow();
+        currentStage.close();
+        StartPage startPage = new StartPage();
+        startPage.start(new Stage());
+    }
+
+    private void OpenMyGarage(ActionEvent event) {
+        Stage currentStage = (Stage) ((Button) event.getSource()).getScene().getWindow();
+        currentStage.close();
+        MyGarage mygarage = new MyGarage();
+        mygarage.start(new Stage());
+    }
+
+    private void ToBasket(ActionEvent event) {
+        Stage currentStage = (Stage) ((Button) event.getSource()).getScene().getWindow();
+        currentStage.close();
+        Basket basket = new Basket();
+        basket.start(new Stage());
+    }
+
+    private void SavedItems(ActionEvent event) {
+        Stage currentStage = (Stage) ((Button) event.getSource()).getScene().getWindow();
+        currentStage.close();
+        SavedItems saved = new SavedItems();
+        saved.start(new Stage());
+    }
+
+    private void search(ActionEvent event){
+        try {
+            Results.getChildren().clear();
+            type = typeSelector.getValue();
+            String query = searchInput.getText();
+            SearchLogic searchLogic = new SearchLogic();
+            searchLogic.SearchStatement(query, Results);
+            if (Results.getChildren().size() == 0) {
+                root.setBottom(featuredContent);
+                searchInput.setText("");
+                searchInput.setPromptText("No Results");
+            }
+            else{
+                root.setBottom(Results);
+            }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }
