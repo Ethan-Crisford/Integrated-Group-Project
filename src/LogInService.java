@@ -28,7 +28,6 @@ public class LogInService {
         }
     }
 
-
     public boolean login(String username, String Password) throws SQLException {
         String query = "SELECT * FROM login WHERE username = ? AND password = ?";
         try (PreparedStatement ps = con.prepareStatement(query)) {
