@@ -35,7 +35,14 @@ public class LogInService {
             ps.setString(1, username);
             ps.setString(2, hashPassword(Password));
             ResultSet rs = ps.executeQuery();
-            return rs.next();
+            if (rs.next()) {
+                Session.userId = rs.getInt("id");
+                Session.username = rs.getString("username");
+                return true;
+            }
+            else{
+                return false;
+            }
         }
     }
 
