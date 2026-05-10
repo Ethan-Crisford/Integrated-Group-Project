@@ -121,7 +121,7 @@ public class LogInUI extends Application {
             if (loginService != null && loginService.login(username, password)) {
                 // NAVIGATION: Open Home Page
                 HomePageUI homePage = new HomePageUI();
-                homePage.show(stage);
+                homePage.start(stage);
             }
             else {
                 messageLabel.setStyle("-fx-text-fill: red;");

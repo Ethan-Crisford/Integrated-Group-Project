@@ -146,6 +146,6 @@ public class MyGarage {
         Stage currentStage = (Stage) ((Button) event.getSource()).getScene().getWindow();
         currentStage.close();
         HomePageUI home = new HomePageUI();
-        home.show(new Stage());
+        home.start(new Stage());
     }
 }
