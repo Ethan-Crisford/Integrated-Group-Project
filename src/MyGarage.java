@@ -72,10 +72,8 @@ public class MyGarage {
         scroll.setFitToWidth(true);
         scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 
-        main.getChildren().addAll(title, buttons, scroll);
+        main.getChildren().addAll(main2, buttons, scroll);
         stage.setScene(new Scene(main, 600, 600));
-        main.getChildren().addAll(main2, addItemBtn);
-        stage.setScene(new Scene(main, 400, 300));
         stage.setTitle("Garage");
         stage.show();
 

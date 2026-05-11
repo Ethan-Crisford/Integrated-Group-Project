@@ -45,17 +45,6 @@ public class SearchLogic {
                     int miles = rs.getInt("miles");
                     double price = rs.getDouble("price");
 
-                    HBox Rrow = new HBox(10);
-                    Label result = new Label(make + " | " + model + " | Year: " + year + " | Miles: " + miles + " | Price: £" + price + " |");
-
-                    String item = make + " | " + model + " | Year: " + year + " | Miles: " + miles + " | Price: £" + price + " |";
-                    Button addToBasket = new Button("Add To Basket");
-                    addToBasket.setOnAction(e -> {
-                        Basket.basketItems.add(item);
-                    });
-                    Rrow.getChildren().addAll(result,addToBasket);
-                    resultsBox.getChildren().add(Rrow);
-                }
                     System.out.println("Found in DB: " + make + " " + model);
 
                     HBox rRow = createStyledCard(year + " " + make + " " + model, miles + " miles", price, resultsBox);
@@ -89,14 +78,6 @@ public class SearchLogic {
                     String condition = rs.getString("part_condition");
                     double price = rs.getDouble("price");
 
-                    HBox Rrow = new HBox(10);
-                    Label result = new Label(name + " | " + category + " | Price:£" + price + " | Condition: " + partCondition + " | brand: " + brand + " |");
-
-                    String item = name + " | " + category + " | Price:£" + price + " | Condition: " + partCondition + " | brand: " + brand + " |";
-                    Button addToBasket = new Button("Add To Basket");
-                    addToBasket.setOnAction(e -> {
-                        Basket.basketItems.add(item);
-                    });
                     System.out.println("Found in DB: " + name);
 
                     HBox rRow = createStyledCard(name, brand + " | Condition: " + condition, price, resultsBox);
