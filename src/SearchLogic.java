@@ -31,7 +31,7 @@ public class SearchLogic {
                     int miles = rs.getInt("miles");
                     double price = rs.getDouble("price");
 
-                    HBox Rrow = new  HBox(10);
+                    HBox Rrow = new HBox(10);
                     Label result = new Label(make + " | " + model + " | Year: " + year + " | Miles: " + miles + " | Price: £" + price + " |");
 
                     String item = make + " | " + model + " | Year: " + year + " | Miles: " + miles + " | Price: £" + price + " |";
@@ -39,10 +39,8 @@ public class SearchLogic {
                     addToBasket.setOnAction(e -> {
                         Basket.basketItems.add(item);
                     });
-
                     Rrow.getChildren().addAll(result,addToBasket);
                     resultsBox.getChildren().add(Rrow);
-
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -66,7 +64,7 @@ public class SearchLogic {
                     String partCondition = rs.getString("part_condition");
                     String brand = rs.getString("brand");
 
-                    HBox Rrow = new  HBox(10);
+                    HBox Rrow = new HBox(10);
                     Label result = new Label(name + " | " + category + " | Price:£" + price + " | Condition: " + partCondition + " | brand: " + brand + " |");
 
                     String item = name + " | " + category + " | Price:£" + price + " | Condition: " + partCondition + " | brand: " + brand + " |";

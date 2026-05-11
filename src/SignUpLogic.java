@@ -59,7 +59,8 @@ public class SignUpLogic {
             }
             return sb.toString();
 
-        } catch (NoSuchAlgorithmException e) {
+        }
+        catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
             return null;
         }
