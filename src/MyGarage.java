@@ -44,7 +44,18 @@ public class MyGarage {
         main.setPadding(new Insets(20));
         main.setAlignment(Pos.TOP_CENTER);
 
+        VBox main2 = new VBox(10);;
+        main2.setAlignment(Pos.TOP_CENTER);
+
+        Button BackButton = new Button ("Back");
+        BackButton.setOnAction(this::Back);
+        HBox Back = new HBox(BackButton);
+        Back.setAlignment(Pos.TOP_LEFT);
+
         Label title = new Label(Session.username + "'s Garage");
+
+        title.setAlignment(Pos.TOP_CENTER);
+        main2.getChildren().addAll(Back, title);
 
         Button addItemBtn = new Button("Add Item");
         addItemBtn.setOnAction(this::openAddItemForm);
@@ -63,6 +74,8 @@ public class MyGarage {
 
         main.getChildren().addAll(title, buttons, scroll);
         stage.setScene(new Scene(main, 600, 600));
+        main.getChildren().addAll(main2, addItemBtn);
+        stage.setScene(new Scene(main, 400, 300));
         stage.setTitle("Garage");
         stage.show();
 
@@ -304,5 +317,12 @@ public class MyGarage {
         catch (Exception e) {
             System.out.println(e.getMessage());
         }
+    }
+    private void Back(ActionEvent event)
+    {
+        Stage currentStage = (Stage) ((Button) event.getSource()).getScene().getWindow();
+        currentStage.close();
+        HomePageUI home = new HomePageUI();
+        home.start(new Stage());
     }
 }

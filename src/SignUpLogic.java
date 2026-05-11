@@ -3,7 +3,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import javafx.scene.control.*;
 
-
 public class SignUpLogic {
 
     private final String url = "jdbc:mysql://165.227.235.122/ceb96_CI536Database";
@@ -32,7 +31,6 @@ public class SignUpLogic {
             if(rs.next()) {
                 return "Username already taken!";
             }
-
 
             String insertQuery = "INSERT INTO login (username, password) VALUES (?, ?)";
             PreparedStatement psInsert = con.prepareStatement(insertQuery);

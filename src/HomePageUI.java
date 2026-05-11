@@ -15,10 +15,11 @@ public class HomePageUI {
     private ComboBox<String> typeSelector;
     private HBox featuredContent;
     private VBox Results;
+    private VBox searchArea; // Global reference for switching layouts
     private BorderPane root;
     public static String type;
 
-    public void show(Stage stage) {
+    public void start(Stage stage) {
         // Root Layout
         root = new BorderPane();
         root.setPadding(new Insets(20));
@@ -30,13 +31,13 @@ public class HomePageUI {
 
         Label logo = new Label("AutoPartHub");
         logo.setFont(Font.font("Tahoma", 24));
-        logo.setTextFill(Color.web("#6A0DAD")); // Matching your login UI purple
+        logo.setTextFill(Color.web("#6A0DAD"));
 
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
-        Button Basket = new Button ("\uD83D\uDED2");
-        Basket.setOnAction(this::ToBasket);
+        Button BasketBtn = new Button("\uD83D\uDED2");
+        BasketBtn.setOnAction(this::ToBasket);
 
         Button btnGarage = new Button("My Garage");
         btnGarage.setOnAction(this::OpenMyGarage);
@@ -47,12 +48,11 @@ public class HomePageUI {
         Button SavedItems = new Button("⭐");
         SavedItems.setOnAction(this::SavedItems);
 
-        navbar.getChildren().addAll(logo, spacer, SavedItems,Basket, btnGarage, btnLogout);
-
+        navbar.getChildren().addAll(logo, spacer, SavedItems, BasketBtn, btnGarage, btnLogout);
         root.setTop(navbar);
 
-        // Our USP
-        VBox searchArea = new VBox(15);
+        // Search Section
+        searchArea = new VBox(15);
         searchArea.setAlignment(Pos.CENTER);
         searchArea.setStyle("-fx-background-color: #f4f4f4; -fx-padding: 40; -fx-border-radius: 10;");
 
@@ -71,7 +71,7 @@ public class HomePageUI {
         searchInput.setPrefWidth(350);
 
         Button searchBtn = new Button("Search");
-        searchBtn.setStyle("-fx-background-color: #6A0DAD; -fx-text-fill: white;");
+        searchBtn.setStyle("-fx-background-color: #6A0DAD; -fx-text-fill: white; -fx-font-weight: bold;");
         searchBtn.setOnAction(this::search);
 
         searchBar.getChildren().addAll(typeSelector, searchInput, searchBtn);
@@ -79,12 +79,10 @@ public class HomePageUI {
 
         root.setCenter(searchArea);
 
-        // 3. Featured Section (Bottom)
+        // Featured Items
         featuredContent = new HBox(20);
         featuredContent.setPadding(new Insets(20, 0, 0, 0));
         featuredContent.setAlignment(Pos.CENTER);
-
-        // Example placeholders for "Featured Items"
         featuredContent.getChildren().addAll(
                 createFeatureCard("2021 Audi A3", "£22,000"),
                 createFeatureCard("Brembo Brake Kit", "£120.00"),
@@ -93,16 +91,16 @@ public class HomePageUI {
 
         root.setBottom(featuredContent);
 
+
         Results = new VBox(15);
         Results.setPadding(new Insets(20));
-        Results.setAlignment(Pos.CENTER);
+        Results.setAlignment(Pos.TOP_CENTER);
 
-        Scene scene = new Scene(root, 900, 600);
+        Scene scene = new Scene(root, 900, 700);
         stage.setTitle("AutoPartHub - Home");
         stage.setScene(scene);
         stage.show();
     }
-
 
     private VBox createFeatureCard(String title, String price) {
         VBox card = new VBox(5);
@@ -113,52 +111,54 @@ public class HomePageUI {
         return card;
     }
 
+    private void search(ActionEvent event) {
+        try {
+            Results.getChildren().clear();
+            type = typeSelector.getValue();
+            String query = searchInput.getText();
+
+
+            SearchLogic searchLogic = new SearchLogic();
+            searchLogic.SearchStatement(query, Results);
+
+            // ScrollPane logic
+            ScrollPane scrollPane = new ScrollPane(Results);
+            scrollPane.setFitToWidth(true);
+            scrollPane.setPrefHeight(400);
+            scrollPane.setStyle("-fx-background-color:transparent; -fx-background:transparent;");
+
+            // Immediately switches the layout to show the search bar and the scrolling results
+            // I removed the 'isEmpty' check because it was firing just before the DB could finish will remove these notes later.
+            VBox mainLayout = new VBox(20, searchArea, scrollPane);
+            root.setCenter(mainLayout);
+            root.setBottom(null); // Hide featured items to show search results
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     private void Logout(ActionEvent event) {
         Stage currentStage = (Stage) ((Button) event.getSource()).getScene().getWindow();
         currentStage.close();
-        StartPage startPage = new StartPage();
-        startPage.start(new Stage());
+        new StartPage().start(new Stage());
     }
 
     private void OpenMyGarage(ActionEvent event) {
         Stage currentStage = (Stage) ((Button) event.getSource()).getScene().getWindow();
         currentStage.close();
-        MyGarage mygarage = new MyGarage();
-        mygarage.start(new Stage());
+        new MyGarage().start(new Stage());
     }
 
     private void ToBasket(ActionEvent event) {
         Stage currentStage = (Stage) ((Button) event.getSource()).getScene().getWindow();
         currentStage.close();
-        Basket basket = new Basket();
-        basket.start(new Stage());
+        new Basket().start(new Stage());
     }
 
     private void SavedItems(ActionEvent event) {
         Stage currentStage = (Stage) ((Button) event.getSource()).getScene().getWindow();
         currentStage.close();
-        SavedItems saved = new SavedItems();
-        saved.start(new Stage());
-    }
-
-    private void search(ActionEvent event){
-        try {
-            Results.getChildren().clear();
-            type = typeSelector.getValue();
-            String query = searchInput.getText();
-            SearchLogic searchLogic = new SearchLogic();
-            searchLogic.SearchStatement(query, Results);
-            if (Results.getChildren().size() == 0) {
-                root.setBottom(featuredContent);
-                searchInput.setText("");
-                searchInput.setPromptText("No Results");
-            }
-            else{
-                root.setBottom(Results);
-            }
-        }
-        catch (SQLException e) {
-            e.printStackTrace();
-        }
+        new SavedItems().start(new Stage());
     }
 }
