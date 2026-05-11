@@ -19,7 +19,16 @@ public class Basket {
         back.setOnAction(this::back);
 
         Button Checkout = new Button("Checkout");
-        Checkout.setOnAction(this::Checkout);
+        //Checkout.setOnAction(this::Checkout);
+
+        Checkout.setOnAction(event -> {
+            Stage currentStage = (Stage) ((Button) event.getSource())
+                    .getScene()
+                    .getWindow();
+
+            Checkout checkout = new Checkout();
+            checkout.start(currentStage);
+        });
 
         HBox BackBox = new HBox(back);
         HBox TitleBox = new HBox(title);
@@ -66,10 +75,6 @@ public class Basket {
         Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
         stage.close();
         HomePageUI home = new HomePageUI();
-        home.show(new Stage());
-    }
-
-    private void Checkout(ActionEvent event) {
-        //empty rn add later
+        home.start(new Stage());
     }
 }

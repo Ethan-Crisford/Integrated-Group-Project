@@ -19,7 +19,7 @@ public class HomePageUI {
     private BorderPane root;
     public static String type;
 
-    public void show(Stage stage) {
+    public void start(Stage stage) {
         // Root Layout
         root = new BorderPane();
         root.setPadding(new Insets(20));
