@@ -79,7 +79,7 @@ public class SavedItems {
                 String details = rs.getString("item_details");
                 double price = rs.getDouble("price");
                 String imgPath = rs.getString("image_path");
-                int id = rs.getInt("id");
+                int id = rs.getInt("SavedID");
 
                 HBox card = createSavedCard(name, details, price, imgPath, id);
                 savedContainer.getChildren().add(card);
@@ -153,7 +153,7 @@ public class SavedItems {
 
     private void unsaveItem(int id) {
         try (Connection con = DriverManager.getConnection(url, dbUser, dbPassword)) {
-            String sql = "DELETE FROM saved_items WHERE id = ?";
+            String sql = "DELETE FROM saved_items WHERE savedID = ?";
             PreparedStatement ps = con.prepareStatement(sql);
             ps.setInt(1, id);
             ps.executeUpdate();
