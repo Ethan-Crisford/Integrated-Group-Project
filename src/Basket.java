@@ -135,7 +135,7 @@ public class Basket {
 
         VBox info = new VBox(5);
         info.setAlignment(Pos.CENTER_LEFT);
-        info.setPrefWidth(250); // Give it enough space for the title
+        info.setPrefWidth(250);
 
         Label lblTitle = new Label(title);
         lblTitle.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #333;");

@@ -35,22 +35,20 @@ public class MyGarage {
         VBox main = new VBox(20);
         main.setPadding(new Insets(20));
         main.setAlignment(Pos.TOP_CENTER);
-        main.setStyle("-fx-background-color: #f4f4f4;"); // Light grey background like search
+        main.setStyle("-fx-background-color: #f4f4f4;");
 
-        VBox headerBox = new VBox(10);
-        headerBox.setAlignment(Pos.TOP_CENTER);
-
+        // Header
         Button BackButton = new Button("Back");
         BackButton.setStyle("-fx-background-color: #6b21a8; -fx-text-fill: white; -fx-cursor: hand;");
         BackButton.setOnAction(this::Back);
+
         HBox backContainer = new HBox(BackButton);
         backContainer.setAlignment(Pos.TOP_LEFT);
 
         Label title = new Label(Session.username + "'s Garage");
         title.setStyle("-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #333;");
 
-        headerBox.getChildren().addAll(backContainer, title);
-
+        // Controls
         Button addItemBtn = new Button("Add Item");
         addItemBtn.setStyle("-fx-background-color: #6b21a8; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 15;");
         addItemBtn.setOnAction(this::openAddItemForm);
@@ -64,15 +62,14 @@ public class MyGarage {
 
         Owned = new VBox(15);
         Owned.setPadding(new Insets(10));
+        Owned.setAlignment(Pos.TOP_CENTER);
 
         ScrollPane scroll = new ScrollPane(Owned);
         scroll.setFitToWidth(true);
-        scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         scroll.setStyle("-fx-background: transparent; -fx-background-color: transparent;");
 
-        main.getChildren().addAll(headerBox, controls, scroll);
-        stage.setScene(new Scene(main, 750, 700)); // Widened slightly for the cards
-        stage.setTitle("My Garage");
+        main.getChildren().addAll(backContainer, title, controls, scroll);
+        stage.setScene(new Scene(main, 800, 750));
         stage.show();
 
         ShowItems();
@@ -88,13 +85,13 @@ public class MyGarage {
             ResultSet rsCar = psCar.executeQuery();
 
             while (rsCar.next()) {
-                String title = rsCar.getInt("year") + " " + rsCar.getString("make") + " " + rsCar.getString("model");
+                String fullTitle = rsCar.getInt("year") + " " + rsCar.getString("make") + " " + rsCar.getString("model");
                 String subtitle = rsCar.getInt("miles") + " miles";
                 double price = rsCar.getDouble("price");
                 String imgPath = rsCar.getString("image_path");
                 int id = rsCar.getInt("id");
 
-                HBox card = createGarageCard(title, subtitle, price, imgPath, "cars", id);
+                HBox card = createGarageCard(fullTitle, subtitle, price, imgPath, "cars", id);
                 Owned.getChildren().add(card);
             }
 
@@ -106,7 +103,7 @@ public class MyGarage {
 
             while (rsPart.next()) {
                 String title = rsPart.getString("name");
-                String subtitle = rsPart.getString("brand") + " | " + rsPart.getString("part_condition");
+                String subtitle = rsPart.getString("brand") + " | Condition: " + rsPart.getString("part_condition");
                 double price = rsPart.getDouble("price");
                 String imgPath = rsPart.getString("image_path");
                 int id = rsPart.getInt("id");
@@ -119,17 +116,21 @@ public class MyGarage {
         }
     }
 
+
     private HBox createGarageCard(String title, String subtitle, double price, String imgPath, String tableName, int id) {
         HBox card = new HBox(20);
+        card.setPrefWidth(700);
         card.setAlignment(Pos.CENTER_LEFT);
         card.setStyle(
                 "-fx-background-color: white; " +
                         "-fx-background-radius: 10; " +
+                        "-fx-border-radius: 10; " +
+                        "-fx-border-color: #ddd; " +
                         "-fx-padding: 15; " +
                         "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);"
         );
 
-        // Image Handling
+
         ImageView imageView = new ImageView();
         try {
             if (imgPath != null && !imgPath.isEmpty()) {
@@ -140,41 +141,40 @@ public class MyGarage {
                     imageView.setImage(new Image("https://via.placeholder.com/120x80.png?text=No+Photo"));
                 }
             }
-        } catch (Exception e) {
-            imageView.setImage(new Image("https://via.placeholder.com/120x80.png?text=Error"));
-        }
+        } catch (Exception e) { e.printStackTrace(); }
 
-        imageView.setFitWidth(120);
-        imageView.setFitHeight(80);
         Rectangle clip = new Rectangle(120, 80);
-        clip.setArcWidth(15);
-        clip.setArcHeight(15);
+        clip.setArcWidth(10);
+        clip.setArcHeight(10);
         imageView.setClip(clip);
 
 
-        VBox info = new VBox(5);
-        Label lblTitle = new Label(title);
-        lblTitle.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
-        Label lblSub = new Label(subtitle);
-        lblSub.setStyle("-fx-text-fill: #666;");
-        Label lblPrice = new Label("£" + String.format("%.2f", price));
-        lblPrice.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #6b21a8;");
-        info.getChildren().addAll(lblTitle, lblSub, lblPrice);
+        VBox infoBox = new VBox(5);
+        Label titleLabel = new Label(title);
+        titleLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #333;");
+
+        Label subLabel = new Label(subtitle);
+        subLabel.setStyle("-fx-font-size: 14px; -fx-text-fill: #666;");
+
+        Label priceLabel = new Label("£" + String.format("%.2f", price));
+        priceLabel.setStyle("-fx-font-size: 20px; -fx-text-fill: #6b21a8; -fx-font-weight: bold;");
+
+        infoBox.getChildren().addAll(titleLabel, subLabel, priceLabel);
 
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
-        // Remove Button
+
         Button removeBtn = new Button("Remove");
-        removeBtn.setStyle("-fx-background-color: #ef4444; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5;");
+        removeBtn.setStyle("-fx-background-color: #ef4444; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10 20; -fx-background-radius: 5; -fx-cursor: hand;");
         removeBtn.setOnAction(e -> deleteItem(tableName, id));
 
-        card.getChildren().addAll(imageView, info, spacer, removeBtn);
+        card.getChildren().addAll(imageView, infoBox, spacer, removeBtn);
         return card;
     }
 
     private void deleteItem(String table, int id) {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Delete this item?", ButtonType.YES, ButtonType.NO);
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Remove this item from your garage?", ButtonType.YES, ButtonType.NO);
         alert.showAndWait();
 
         if (alert.getResult() == ButtonType.YES) {
@@ -183,13 +183,10 @@ public class MyGarage {
                 PreparedStatement ps = con.prepareStatement(sql);
                 ps.setInt(1, id);
                 ps.executeUpdate();
-                ShowItems(); // Refresh
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+                ShowItems(); // Refresh the UI
+            } catch (SQLException e) { e.printStackTrace(); }
         }
     }
-
 
     private void openAddItemForm(ActionEvent event) {
         formStage = new Stage();
@@ -201,20 +198,22 @@ public class MyGarage {
         VBox form = new VBox(10);
         form.setPadding(new Insets(20));
         form.setAlignment(Pos.CENTER);
-        Label Title = new Label("Add Car");
-        Title.setStyle("-fx-font-size: 20px; -fx-font-weight: bold;");
+
         makeField = new TextField(); makeField.setPromptText("Make");
         modelField = new TextField(); modelField.setPromptText("Model");
         yearField = new TextField(); yearField.setPromptText("Year");
         milesField = new TextField(); milesField.setPromptText("Miles");
         priceField = new TextField(); priceField.setPromptText("Price");
+
         imageLabel = new Label("No image selected");
         Button uploadBtn = new Button("Upload Image");
         uploadBtn.setOnAction(this::Upload);
+
         Button submitBtn = new Button("Submit");
         submitBtn.setOnAction(this::SubmitCar);
-        form.getChildren().addAll(Title, makeField, modelField, yearField, milesField, priceField, uploadBtn, imageLabel, submitBtn);
-        stage.setScene(new Scene(form, 400, 500));
+
+        form.getChildren().addAll(new Label("Add New Car"), makeField, modelField, yearField, milesField, priceField, uploadBtn, imageLabel, submitBtn);
+        stage.setScene(new Scene(form, 350, 500));
         stage.show();
     }
 
@@ -222,26 +221,27 @@ public class MyGarage {
         VBox form = new VBox(10);
         form.setPadding(new Insets(20));
         form.setAlignment(Pos.CENTER);
-        Label Title = new Label("Add Part");
-        Title.setStyle("-fx-font-size: 20px; -fx-font-weight: bold;");
-        NameField = new TextField(); NameField.setPromptText("Name");
-        CategoryField = new TextField(); CategoryField.setPromptText("Category");
-        PriceField = new TextField(); PriceField.setPromptText("Price");
-        PartConditionField = new TextField(); PartConditionField.setPromptText("Condition");
+
+        NameField = new TextField(); NameField.setPromptText("Part Name");
         BrandField = new TextField(); BrandField.setPromptText("Brand");
+        PriceField = new TextField(); PriceField.setPromptText("Price");
+        PartConditionField = new TextField(); PartConditionField.setPromptText("Condition (New/Used)");
+        CategoryField = new TextField(); CategoryField.setPromptText("Category");
+
         imageLabel = new Label("No image selected");
         Button uploadBtn = new Button("Upload Image");
         uploadBtn.setOnAction(this::Upload);
+
         Button submitBtn = new Button("Submit");
         submitBtn.setOnAction(this::SubmitPart);
-        form.getChildren().addAll(Title, NameField, CategoryField, PriceField, PartConditionField, BrandField, uploadBtn, imageLabel, submitBtn);
-        stage.setScene(new Scene(form, 400, 500));
+
+        form.getChildren().addAll(new Label("Add New Part"), NameField, BrandField, PriceField, PartConditionField, CategoryField, uploadBtn, imageLabel, submitBtn);
+        stage.setScene(new Scene(form, 350, 500));
         stage.show();
     }
 
     private void Upload(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Images", "*.jpg", "*.png", "*.jpeg"));
         File file = fileChooser.showOpenDialog(formStage);
         if (file != null) {
             selectedFile = file;
@@ -260,11 +260,10 @@ public class MyGarage {
             ps.setInt(5, Integer.parseInt(milesField.getText()));
             ps.setDouble(6, Double.parseDouble(priceField.getText()));
             ps.executeUpdate();
+
             ResultSet rs = ps.getGeneratedKeys();
-            if (rs.next()) {
-                int carId = rs.getInt(1);
-                handleImageSaving(con, carId, "cars");
-            }
+            if (rs.next()) handleImageSaving(con, rs.getInt(1), "cars");
+
             formStage.close();
             ShowItems();
         } catch (Exception e) { e.printStackTrace(); }
@@ -272,20 +271,19 @@ public class MyGarage {
 
     private void SubmitPart(ActionEvent event) {
         try (Connection con = DriverManager.getConnection(url, user, pass)) {
-            String sql = "INSERT INTO parts (user_id, name, category, price, part_condition, brand) VALUES (?, ?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO parts (user_id, name, brand, price, part_condition, category) VALUES (?, ?, ?, ?, ?, ?)";
             PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             ps.setInt(1, Session.userId);
             ps.setString(2, NameField.getText());
-            ps.setString(3, CategoryField.getText());
+            ps.setString(3, BrandField.getText());
             ps.setDouble(4, Double.parseDouble(PriceField.getText()));
             ps.setString(5, PartConditionField.getText());
-            ps.setString(6, BrandField.getText());
+            ps.setString(6, CategoryField.getText());
             ps.executeUpdate();
+
             ResultSet rs = ps.getGeneratedKeys();
-            if (rs.next()) {
-                int partId = rs.getInt(1);
-                handleImageSaving(con, partId, "parts");
-            }
+            if (rs.next()) handleImageSaving(con, rs.getInt(1), "parts");
+
             formStage.close();
             ShowItems();
         } catch (Exception e) { e.printStackTrace(); }
@@ -297,7 +295,8 @@ public class MyGarage {
             dir.mkdirs();
             File dest = new File(dir, selectedFile.getName());
             Files.copy(selectedFile.toPath(), dest.toPath(), StandardCopyOption.REPLACE_EXISTING);
-            String path = "images/" + type + "/" + id + "/" + selectedFile.getName();
+            String path = dest.getPath();
+
             PreparedStatement ps = con.prepareStatement("UPDATE " + type + " SET image_path = ? WHERE id = ?");
             ps.setString(1, path);
             ps.setInt(2, id);

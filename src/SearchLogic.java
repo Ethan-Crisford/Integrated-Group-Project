@@ -127,7 +127,7 @@ public class SearchLogic {
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
-        //  ADD TO BASKET LOGIC
+        //  Add To Basket Logic
         Button addToBasket = new Button("Add To Basket");
         addToBasket.setStyle("-fx-background-color: #6b21a8; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10 20; -fx-background-radius: 5; -fx-cursor: hand;");
 
