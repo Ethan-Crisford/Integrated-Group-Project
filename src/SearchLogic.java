@@ -19,6 +19,11 @@ public class SearchLogic {
     private final String dbUser = "ceb96_CI536Login";
     private final String dbPassword = "4V9o&G$?!ro)chO%H[";
 
+    public String formatSearchQuery(String query)
+    {
+        return "%" + query + "%";
+    }
+
     public void SearchStatement(String query, VBox resultsBox) throws SQLException {
         System.out.println("Connecting to database for: " + query);
         Platform.runLater(() -> resultsBox.getChildren().clear());

@@ -2,12 +2,23 @@ import java.sql.*;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import javafx.scene.control.*;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class SignUpLogic {
 
     private final String url = "jdbc:mysql://165.227.235.122/ceb96_CI536Database";
     private final String dbUser = "ceb96_CI536Login";
     private final String dbPassword = "4V9o&G$?!ro)chO%H[";
+
+    /*** This test checks that the SHA-256 output is a 64 character string like it should be. 256/4 = 64 */
+    @Test
+    public void testHashIs64Characters()
+    {
+        SignUpLogic logic = new SignUpLogic();
+        String hash = logic.hashPassword("test123?");
+        assertEquals(64, hash.length());
+    }
 
     public String registerUser(String username, String password, String confirmPassword) {
 
@@ -47,7 +58,7 @@ public class SignUpLogic {
         }
     }
 
-    private String hashPassword(String password) {
+    public String hashPassword(String password) {
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-256");
             byte[] hashedBytes = md.digest(password.getBytes());
