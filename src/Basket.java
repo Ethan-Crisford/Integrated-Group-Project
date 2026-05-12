@@ -5,11 +5,15 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+import java.io.File;
 import java.util.ArrayList;
 
 public class Basket {
@@ -22,7 +26,7 @@ public class Basket {
         mainLayout.setAlignment(Pos.TOP_CENTER);
         mainLayout.setStyle("-fx-background-color: #f4f4f4;");
 
-
+        // Back Button
         Button back = new Button("Back");
         back.setStyle("-fx-background-color: #6b21a8; -fx-text-fill: white; -fx-cursor: hand;");
         back.setOnAction(this::back);
@@ -30,20 +34,20 @@ public class Basket {
         HBox backBox = new HBox(back);
         backBox.setAlignment(Pos.TOP_LEFT);
 
-        Label title = new Label("Your Basket");
-        title.setStyle("-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #333;");
+        Label titleLabel = new Label("Your Basket");
+        titleLabel.setStyle("-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #333;");
 
-        //  Items Code
+        // Container for items
         itemsBox = new VBox(15);
         itemsBox.setAlignment(Pos.TOP_CENTER);
         itemsBox.setPadding(new Insets(10));
 
         ScrollPane scrollPane = new ScrollPane(itemsBox);
         scrollPane.setFitToWidth(true);
-        scrollPane.setPrefHeight(400);
+        scrollPane.setPrefHeight(450);
         scrollPane.setStyle("-fx-background: transparent; -fx-background-color: transparent;");
 
-        // Checkout Code
+        // Checkout Button
         Button checkoutBtn = new Button("Proceed to Checkout");
         checkoutBtn.setStyle("-fx-background-color: #6b21a8; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 12 30; -fx-font-size: 16px; -fx-background-radius: 5; -fx-cursor: hand;");
         checkoutBtn.setOnAction(event -> {
@@ -52,11 +56,11 @@ public class Basket {
             checkout.start(currentStage);
         });
 
-        mainLayout.getChildren().addAll(backBox, title, scrollPane, checkoutBtn);
+        mainLayout.getChildren().addAll(backBox, titleLabel, scrollPane, checkoutBtn);
 
-        BasketItems(); // Load the cards
+        BasketItems();
 
-        Scene scene = new Scene(mainLayout, 700, 700);
+        Scene scene = new Scene(mainLayout, 750, 750);
         stage.setScene(scene);
         stage.setTitle("Basket");
         stage.show();
@@ -73,18 +77,28 @@ public class Basket {
         }
 
         for (String itemData : new ArrayList<>(basketItems)) {
-            // itemData looks like: "2005 Lightning McQueen - £1000000.0"
-            // We split it to get the name and the price separately
-            String[] parts = itemData.split(" - ");
-            String title = parts[0];
-            String price = (parts.length > 1) ? parts[1] : "£0.00";
+            String title, price, imgPath;
 
-            HBox card = createBasketCard(title, price, itemData);
+
+            if (itemData.contains("|")) {
+                String[] parts = itemData.split("\\|");
+                title = parts[0];
+                price = (parts.length > 1) ? parts[1] : "0.00";
+                imgPath = (parts.length > 2) ? parts[2] : "";
+            } else {
+
+                String[] parts = itemData.split(" - ");
+                title = parts[0];
+                price = (parts.length > 1) ? parts[1].replace("£", "") : "0.00";
+                imgPath = "";
+            }
+
+            HBox card = createBasketCard(title, price, imgPath, itemData);
             itemsBox.getChildren().add(card);
         }
     }
 
-    private HBox createBasketCard(String title, String price, String originalData) {
+    private HBox createBasketCard(String title, String price, String imgPath, String originalData) {
         HBox card = new HBox(20);
         card.setAlignment(Pos.CENTER_LEFT);
         card.setStyle(
@@ -94,11 +108,40 @@ public class Basket {
                         "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);"
         );
 
-        VBox info = new VBox(5);
-        Label lblTitle = new Label(title);
-        lblTitle.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
 
-        Label lblPrice = new Label(price);
+        ImageView imageView = new ImageView();
+        try {
+            if (imgPath != null && !imgPath.isEmpty()) {
+                File file = new File(imgPath);
+                if (file.exists()) {
+                    imageView.setImage(new Image(file.toURI().toString(), 120, 80, true, true));
+                } else {
+                    imageView.setImage(new Image("https://via.placeholder.com/120x80.png?text=No+Photo"));
+                }
+            } else {
+                imageView.setImage(new Image("https://via.placeholder.com/120x80.png?text=No+Image"));
+            }
+        } catch (Exception e) {
+            imageView.setImage(new Image("https://via.placeholder.com/120x80.png?text=Error"));
+        }
+
+        imageView.setFitWidth(120);
+        imageView.setFitHeight(80);
+        Rectangle clip = new Rectangle(120, 80);
+        clip.setArcWidth(15);
+        clip.setArcHeight(15);
+        imageView.setClip(clip);
+
+
+        VBox info = new VBox(5);
+        info.setAlignment(Pos.CENTER_LEFT);
+        info.setPrefWidth(250); // Give it enough space for the title
+
+        Label lblTitle = new Label(title);
+        lblTitle.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #333;");
+        lblTitle.setWrapText(true);
+
+        Label lblPrice = new Label("£" + price);
         lblPrice.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #6b21a8;");
 
         info.getChildren().addAll(lblTitle, lblPrice);
@@ -106,14 +149,15 @@ public class Basket {
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
+        // Remove Button
         Button removeBtn = new Button("Remove");
         removeBtn.setStyle("-fx-background-color: #ef4444; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5; -fx-cursor: hand;");
         removeBtn.setOnAction(e -> {
             basketItems.remove(originalData);
-            BasketItems(); // Refresh the list
+            BasketItems();
         });
 
-        card.getChildren().addAll(info, spacer, removeBtn);
+        card.getChildren().addAll(imageView, info, spacer, removeBtn);
         return card;
     }
 

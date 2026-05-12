@@ -79,7 +79,7 @@ public class SearchLogic {
                         "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);"
         );
 
-
+        //  Image Logic
         ImageView imageView = new ImageView();
         try {
             if (imgPath != null && !imgPath.isEmpty()) {
@@ -97,10 +97,9 @@ public class SearchLogic {
         clip.setArcHeight(10);
         imageView.setClip(clip);
 
-        // FAVORITE STAR BUTTON
+        // Favorite Star Button
         Button favBtn = new Button("☆");
         favBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: #888; -fx-font-size: 20px; -fx-cursor: hand; -fx-padding: 0;");
-
         favBtn.setOnAction(e -> {
             if (favBtn.getText().equals("☆")) {
                 saveItemToDb(title, subtitle, price, imgPath);
@@ -109,10 +108,8 @@ public class SearchLogic {
             }
         });
 
-
+        // Info Section
         VBox infoBox = new VBox(5);
-
-        // Title and Star in one row
         HBox titleRow = new HBox(10);
         Label titleLabel = new Label(title);
         titleLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #333;");
@@ -130,9 +127,15 @@ public class SearchLogic {
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
+        //  ADD TO BASKET LOGIC
         Button addToBasket = new Button("Add To Basket");
         addToBasket.setStyle("-fx-background-color: #6b21a8; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10 20; -fx-background-radius: 5; -fx-cursor: hand;");
-        addToBasket.setOnAction(e -> Basket.basketItems.add(title + " - £" + price));
+
+        addToBasket.setOnAction(e -> {
+
+            Basket.basketItems.add(title + "|" + String.format("%.2f", price) + "|" + imgPath);
+            System.out.println("DEBUG: Added to basket: " + title);
+        });
 
         card.getChildren().addAll(imageView, infoBox, spacer, addToBasket);
         return card;
